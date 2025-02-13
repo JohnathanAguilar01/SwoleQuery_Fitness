@@ -1,0 +1,28 @@
+{
+  "name": "adj_fitness",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run start:backend & npm run start:frontend",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "lint": "eslint ./backend ./frontend/src",
+    "format": "prettier --write ./backend ./frontend/src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.16.0",
+    "prettier": "^3.4.2"
+  },
+  "dependencies": {
+    "knex": "^3.1.0",
+    "mysql2": "^3.11.5"
+  }
+}
