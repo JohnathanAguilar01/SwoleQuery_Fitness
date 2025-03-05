@@ -1,0 +1,56 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: swole-frontend:latest
+    container_name: swole-frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - ./.env:/app/.env
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: swole-backend:latest
+    container_name: swole-backend
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./.env:/app/.env
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    container_name: swole-db
+    secrets:
+      - db-root-password
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DATABASE=Real_Fake_Car_Rentals
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-root-password
+  seeder:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: swole-seeder:latest
+    container_name: swole-seeder
+    volumes:
+      - ./database:/app/database # Persist the marker file
+      - ./.env:/app/.env
+    depends_on:
+      - db
+volumes:
+  db-data:
+secrets:
+  db-root-password:
+    file: ./.secrets/db-root-password.txt
