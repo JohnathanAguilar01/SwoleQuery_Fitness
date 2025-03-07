@@ -2,4 +2,3 @@ node_modules/
 .env
 dist/
 .secrets/
-database/.seeds_run
