@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS workouts(
   workout_date datetime,
   notes varchar(256),
 
-  FOREIGN KEY (user_id) REFERENCES users(user_id)
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS exercises(
@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS exercises(
   exercise_type varchar(20) CHECK ( exercise_type IN ('cardio', 'strength training')),
   calories_burned INT,
 
-  FOREIGN KEY (user_id) REFERENCES users(user_id),
-  FOREIGN KEY (workout_id) REFERENCES workouts(workout_id)
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (workout_id) REFERENCES workouts(workout_id) ON DELETE CASCADE
 );
 
 CREATE TABLE calisthenics_exercises (
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS meals(
   fats decimal(6,2),
   notes varchar(256),
 
-  FOREIGN KEY (user_id) REFERENCES users(user_id)
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS food_items(
