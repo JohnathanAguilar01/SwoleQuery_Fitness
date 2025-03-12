@@ -36,4 +36,39 @@ router.get("/search/user", async (req, res) => {
   }
 });
 
+router.post("/add", async (req, res) => {
+  try {
+    const { user_id, recorded_at, weight, body_fat_percentage, muscle_mass } =
+      req.body;
+
+    if (!user_id || !weight) {
+      return res.status(400).json({ error: "user_id or weight not present" });
+    }
+
+    if (!Number.isInteger(user_id) || !Number.isFinite(weight)) {
+      return res
+        .status(400)
+        .json({ error: "user_id or weight are not correct data type" });
+    }
+
+    const query =
+      "INSERT INTO progress (user_id, recorded_at, weight, body_fat_percentage, muscle_mass) VALUES (?,?,?,?,?)";
+
+    const [rows] = await db.query(query, [
+      user_id,
+      recorded_at,
+      weight,
+      body_fat_percentage,
+      muscle_mass,
+    ]);
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Server Error:", error.message);
+    return res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
+});
+
 export default router;
