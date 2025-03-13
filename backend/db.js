@@ -1,6 +1,6 @@
-require("dotenv").config({ path: "../.env" });
-
-const mysql = require("mysql2");
+import mysql from "mysql2";
+import dotenv from "dotenv";
+dotenv.config();
 
 // Create a MySQL connection pool
 const pool = mysql.createPool({
@@ -26,4 +26,4 @@ pool.getConnection((err, connection) => {
   }
 });
 
-module.exports = db;
+export default db;
