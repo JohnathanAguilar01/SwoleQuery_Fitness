@@ -39,6 +39,10 @@ router.get("/search/user", async (req, res) => {
       return res.status(400).json({ error: "user_id is required" });
     }
 
+    if (isNaN(Number(user_id))) {
+      return res.status(400).json({ error: "user_id must be a number" });
+    }
+
     const query = 'SELECT * FROM workouts WHERE user_id = ?'
 
     const [rows] = await db.query(query, [user_id]);

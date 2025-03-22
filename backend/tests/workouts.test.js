@@ -136,7 +136,7 @@ describe("/search/user", () => {
             test("should return 200 and empty workouts array", async () => {
               const response = await request(app)
                 .get("/workouts/search/user")
-                .query({ user_id: 9999 }) // assuming this user_id doesn't exist
+                .query({ user_id: 9999 })
                 .expect(200);
           
               expect(response.body).toHaveProperty("message", "Workouts retrieved successfully");
@@ -157,14 +157,13 @@ describe("/search/user", () => {
         });
 
         describe("non-numeric user_id", () => {
-            test("should still return 200 but likely empty array", async () => {
+            test("should respond with 400 and error message", async () => {
               const response = await request(app)
                 .get("/workouts/search/user")
                 .query({ user_id: "abc" })
-                .expect(200);
-          
-              expect(response.body).toHaveProperty("message", "Workouts retrieved successfully");
-              expect(Array.isArray(response.body.workouts)).toBe(true);
+                .expect(400);
+        
+              expect(response.body).toHaveProperty("error", "user_id must be a number");
             });
         });
     });
