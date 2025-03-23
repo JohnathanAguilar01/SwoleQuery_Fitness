@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser"; // Import cookie-parser
 import foodItemsRoutes from "./routes/food_items.js"; // Import the routes
 import progress from "./routes/progress.js"; // Import the routes
+import workoutsRoutes from "./routes/workouts.js";
 
 dotenv.config();
 
@@ -23,6 +24,8 @@ app.use("/food_items", foodItemsRoutes);
 
 // Middleware to use progress routes
 app.use("/progress", progress);
+
+app.use("/workouts", workoutsRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
