@@ -36,8 +36,10 @@ services:
       - db-data:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d
     environment:
-      - MYSQL_DATABASE=Real_Fake_Car_Rentals
+      - MYSQL_DATABASE=SwoleQuery_Fitness
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-root-password
+    ports:
+      - "3306:3306"
   seeder:
     build:
       context: ./
