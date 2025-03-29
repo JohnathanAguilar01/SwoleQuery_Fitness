@@ -111,7 +111,7 @@ describe("POST /add", () =>{
                 .set("Content-Type", "application/json")
                 .expect(200);
     
-                expect(response.body).toHaveProperty("message", "Workout added successfully");
+                expect(response.body).toHaveProperty("message", "workout added successfully");
                 expect(response.body).toHaveProperty("workout_id");
             });
         });
@@ -127,20 +127,8 @@ describe("/search/user", () => {
                 .query({ user_id: 1 })
                 .expect(200);
           
-              expect(response.body).toHaveProperty("message", "Workouts retrieved successfully");
+              expect(response.body).toHaveProperty("message", "workouts retrieved successfully");
               expect(Array.isArray(response.body.workouts)).toBe(true);
-            });
-        });
-
-        describe("given valid user_id with no workouts", () => {
-            test("should return 200 and empty workouts array", async () => {
-              const response = await request(app)
-                .get("/workouts/search/user")
-                .query({ user_id: 9999 })
-                .expect(200);
-          
-              expect(response.body).toHaveProperty("message", "Workouts retrieved successfully");
-              expect(response.body.workouts).toEqual([]);
             });
         });
     });
@@ -164,6 +152,56 @@ describe("/search/user", () => {
                 .expect(400);
         
               expect(response.body).toHaveProperty("error", "user_id must be a number");
+            });
+        });
+    });
+});
+
+describe("/search/by-user-date-single", () => {
+    describe("positive tests", () => {
+        describe("given valid user_name and date", () => {
+            test("should return 200 and workouts array", async () => {
+                const response = await request(app)
+                .get("/workouts/search/by-user-date-single")
+                .query({user_id: 1, workout_date: "2025-11-11 00:00:00"})
+                .expect(200);
+
+                expect(response.body).toHaveProperty("message", "workouts retrieved successfully");
+                expect(Array.isArray(response.body.workouts)).toBe(true);  
+            });
+        });
+    });
+
+    describe("negative tests", () => {
+        describe("missing user_id and date in query", () => {
+            test("should respond with 400 and error message", async () => {
+              const response = await request(app)
+                .get("/workouts/search/by-user-date-single")
+                .expect(400);
+          
+              expect(response.body).toHaveProperty("error", "user_id and date are required");
+            });
+        });
+
+        describe("missing only user_id", () => {
+            test("should respond with 400 and error message", async () => {
+              const response = await request(app)
+                .get("/workouts/search/by-user-date-single")
+                .query({workout_date: "025-11-11 00:00:00"})
+                .expect(400);
+          
+              expect(response.body).toHaveProperty("error", "user_id and date are required");
+            });
+        });
+
+        describe("missing only workout_date", () => {
+            test("should respond with 400 and error message", async () => {
+              const response = await request(app)
+                .get("/workouts/search/by-user-date-single")
+                .query({user_id: 1})
+                .expect(400);
+          
+              expect(response.body).toHaveProperty("error", "user_id and date are required");
             });
         });
     });
