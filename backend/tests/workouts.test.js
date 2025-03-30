@@ -206,3 +206,77 @@ describe("/search/by-user-date-single", () => {
         });
     });
 });
+
+describe("/search/by-user-date-range", () => {
+    describe("positive tests", () => {
+      describe("given valid user_id, start_date and end_date", () => {
+        test("should return 200 and workouts array", async () => {
+          const response = await request(app)
+            .get("/workouts/search/by-user-date-range")
+            .query({ 
+              user_id: 1, 
+              start_date: "2025-11-01 00:00:00", 
+              end_date: "2025-11-30 00:00:00" 
+            })
+            .expect(200);
+    
+          expect(response.body).toHaveProperty("message", "workouts retrieved successfully");
+          expect(Array.isArray(response.body.workouts)).toBe(true);
+        });
+      });
+    });
+    
+    describe("negative tests", () => {
+      describe("missing user_id, start_date and end_date in query", () => {
+        test("should respond with 400 and error message", async () => {
+          const response = await request(app)
+            .get("/workouts/search/by-user-date-range")
+            .expect(400);
+    
+          expect(response.body).toHaveProperty("error", "user_id, start_date and end_date are required");
+        });
+      });
+    
+      describe("missing only user_id", () => {
+        test("should respond with 400 and error message", async () => {
+          const response = await request(app)
+            .get("/workouts/search/by-user-date-range")
+            .query({ 
+              start_date: "2025-11-01 00:00:00", 
+              end_date: "2025-11-30 00:00:00" 
+            })
+            .expect(400);
+    
+          expect(response.body).toHaveProperty("error", "user_id, start_date and end_date are required");
+        });
+      });
+    
+      describe("missing only start_date", () => {
+        test("should respond with 400 and error message", async () => {
+          const response = await request(app)
+            .get("/workouts/search/by-user-date-range")
+            .query({ 
+              user_id: 1, 
+              end_date: "2025-11-30 00:00:00" 
+            })
+            .expect(400);
+    
+          expect(response.body).toHaveProperty("error", "user_id, start_date and end_date are required");
+        });
+      });
+    
+      describe("missing only end_date", () => {
+        test("should respond with 400 and error message", async () => {
+          const response = await request(app)
+            .get("/workouts/search/by-user-date-range")
+            .query({ 
+              user_id: 1, 
+              start_date: "2025-11-01 00:00:00" 
+            })
+            .expect(400);
+    
+          expect(response.body).toHaveProperty("error", "user_id, start_date and end_date are required");
+        });
+      });
+    });
+  });

@@ -90,4 +90,40 @@ router.get("/search/by-user-date-single", async (req, res) => {
   }
 });
 
+// Endpoint to fetch workouts by user ID and date range
+router.get("/search/by-user-date-range", async (req, res) => {
+  try {
+    const {user_id, start_date, end_date} = req.query;
+    
+    if(!user_id || !start_date || !end_date){
+      return res.status(400).json({ error: "user_id, start_date and end_date are required" });
+    }
+
+    if (isNaN(Number(user_id))) {
+      return res.status(400).json({ error: "user_id must be a number" });
+    }
+
+    if (isNaN(Date.parse(start_date)) || isNaN(Date.parse(end_date))) {
+      return res.status(400).json({ error: "start and end date must be valid dates" });
+    }
+
+    if (new Date(start_date) > new Date(end_date)) {
+      return res.status(400).json({ error: "start_date must be before or equal to end_date" });
+    }
+
+    const query = 'SELECT * FROM workouts WHERE user_id = ? AND workout_date BETWEEN ? AND ?'
+
+    const [rows] = await db.query(query, [user_id, start_date, end_date]);
+
+    res.json({
+      message: "workouts retrieved successfully",
+      workouts: rows
+    });
+
+  } catch (error) {
+    console.error("error in fetch workouts route:", error);
+    res.status(500).send("server error");
+  }
+});
+
 export default router;
