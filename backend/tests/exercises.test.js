@@ -332,3 +332,63 @@ describe("/search/exercise", () => {
         });
     });
 });
+
+describe("/search/user-date-range", () => {
+    describe("positive tests", () => {
+        test("should return exercise details for a valid user_id and date range", async () => {
+            const response = await request(app)
+                .get("/exercises/search/user-date-range")
+                .send({
+                    user_id: 1,
+                    start_date: "2021-01-01",
+                    end_date: "2021-01-31"
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveProperty("exercises");
+            expect(Array.isArray(response.body.exercises)).toBe(true);
+        });
+    });
+
+    describe("negative tests", () => {
+        test("should fail when user_id is missing", async () => {
+            const response = await request(app)
+                .get("/exercises/search/user-date-range")
+                .send({
+                    start_date: "2021-01-01",
+                    end_date: "2021-01-31"
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toMatch("user_id, start_date, and end_date are required");
+        });
+
+        test("should fail when start_date is missing", async () => {
+            const response = await request(app)
+                .get("/exercises/search/user-date-range")
+                .send({
+                    user_id: 1,
+                    end_date: "2021-01-31"
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toMatch("user_id, start_date, and end_date are required");
+        });
+
+        test("should fail when end_date is missing", async () => {
+            const response = await request(app)
+                .get("/exercises/search/user-date-range")
+                .send({
+                    user_id: 1,
+                    start_date: "2021-01-01"
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toMatch("user_id, start_date, and end_date are required");
+        });
+    });
+});
