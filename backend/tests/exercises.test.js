@@ -311,7 +311,7 @@ describe("/search/exercise", () => {
         test("should return exercise details for a valid exercise_id", async () => {
             const response = await request(app)
                 .get("/exercises/search/exercise")
-                .send({ exercise_id: 1 })
+                .send({ workout_id: 1 })
                 .set("Content-Type", "application/json");
 
             expect(response.status).toBe(200);
@@ -328,7 +328,7 @@ describe("/search/exercise", () => {
                 .set("Content-Type", "application/json");
 
             expect(response.status).toBe(400);
-            expect(response.body.error).toMatch("exercise_id is required");
+            expect(response.body.error).toMatch("workout_id is required");
         });
     });
 });
