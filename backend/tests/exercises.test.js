@@ -305,3 +305,30 @@ describe("/update", () => {
         });
     });
 });
+
+describe("/search/exercise", () => {
+    describe("positive tests", () => {
+        test("should return exercise details for a valid exercise_id", async () => {
+            const response = await request(app)
+                .get("/exercises/search/exercise")
+                .send({ exercise_id: 1 })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveProperty("exercises");
+            expect(Array.isArray(response.body.exercises)).toBe(true);
+        });
+    });
+
+    describe("negative tests", () => {
+        test("should fail when exercise_id is missing", async () => {
+            const response = await request(app)
+                .get("/exercises/search/exercise")
+                .send({})
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(400);
+            expect(response.body.error).toMatch("exercise_id is required");
+        });
+    });
+});

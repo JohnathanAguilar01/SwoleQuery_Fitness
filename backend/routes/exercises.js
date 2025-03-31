@@ -162,11 +162,11 @@ router.post("/update", async (req, res) => {
     }
 });
 
-router.get("/search/user", async (req, res) => {
+router.get("/search/exercise", async (req, res) => {
     try {
-        const { user_id } = req.body;
-        if (!user_id) {
-            return res.status(400).json({ error: "user_id is required" });
+        const { exercise_id } = req.body;
+        if (!exercise_id) {
+            return res.status(400).json({ error: "exercise_id is required" });
         }
 
         const query = `
@@ -182,13 +182,13 @@ router.get("/search/user", async (req, res) => {
             FROM exercises e
             LEFT JOIN calisthenics_exercises ce ON e.exercise_id = ce.exercise_id
             LEFT JOIN weight_exercises we ON e.exercise_id = we.exercise_id
-            WHERE e.user_id = ?
+            WHERE e.exercise_id = ?
         `;
         
-        const [rows] = await db.query(query, [user_id]);
+        const [rows] = await db.query(query, [exercise_id]);
         res.json({ exercises: rows });
     } catch (error) {
-        console.error("Error in GET /user/:user_id/exercises:", error);
+        console.error("Error in /search/exercise route:", error);
         res.status(500).send("Server error");
     }
 });
