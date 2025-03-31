@@ -162,4 +162,35 @@ router.post("/update", async (req, res) => {
     }
 });
 
+router.get("/search/user", async (req, res) => {
+    try {
+        const { user_id } = req.body;
+        if (!user_id) {
+            return res.status(400).json({ error: "user_id is required" });
+        }
+
+        const query = `
+            SELECT 
+                e.exercise_id,
+                e.intensity,
+                e.exercise_type,
+                e.calories_burned,
+                ce.exercise_time,
+                we.weight,
+                we.sets,
+                we.reps
+            FROM exercises e
+            LEFT JOIN calisthenics_exercises ce ON e.exercise_id = ce.exercise_id
+            LEFT JOIN weight_exercises we ON e.exercise_id = we.exercise_id
+            WHERE e.user_id = ?
+        `;
+        
+        const [rows] = await db.query(query, [user_id]);
+        res.json({ exercises: rows });
+    } catch (error) {
+        console.error("Error in GET /user/:user_id/exercises:", error);
+        res.status(500).send("Server error");
+    }
+});
+
 export default router;
