@@ -15,5 +15,14 @@ exports.seed = async function (knex) {
       height: "120.5",
       weight: "190.4",
     },
+    {
+      first_name: "Jane",
+      last_name: "Doe",
+      username: "janedoe",
+      email: "janedoe@gmail.com",
+      password: "qwerty",
+      height: "94.6",
+      weight: "164.4",
+    },
   ]);
 };
