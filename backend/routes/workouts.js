@@ -20,13 +20,13 @@ router.post("/add", async (req, res) => {
     const [result] = await db.query(insertQuery, [user_id, workout_date, notes || ""]);
     
     res.json({
-      message: "Workout added successfully",
+      message: "workout added successfully",
       workout_id: result.insertId,
     });
 
   }catch(error){
-      console.error("Error in /add workout route:", error);
-      res.status(500).send("Server error");
+      console.error("error in /add workout route:", error);
+      res.status(500).send("server error");
   }
 });
 
@@ -48,13 +48,81 @@ router.get("/search/user", async (req, res) => {
     const [rows] = await db.query(query, [user_id]);
 
     res.json({
-      message: "Workouts retrieved successfully",
+      message: "workouts retrieved successfully",
       workouts: rows
     });
 
   } catch (error) {
-    console.error("Error in fetch workouts route:", error);
-    res.status(500).send("Server error");
+    console.error("error in fetch workouts route:", error);
+    res.status(500).send("server error");
+  }
+});
+
+// Endpoint to fetch workouts by user ID and date
+router.get("/search/by-user-date-single", async (req, res) => {
+  try {
+    const {user_id, workout_date} = req.query;
+    
+    if(!user_id || !workout_date){
+      return res.status(400).json({ error: "user_id and date are required" });
+    }
+
+    if (isNaN(Number(user_id))) {
+      return res.status(400).json({ error: "user_id must be a number" });
+    }
+
+    if (isNaN(Date.parse(workout_date))) {
+      return res.status(400).json({ error: "workout_date must be a valid date" });
+    }
+
+    const query = 'SELECT * FROM workouts WHERE user_id = ? AND workout_date = ?'
+
+    const [rows] = await db.query(query, [user_id, workout_date]);
+
+    res.json({
+      message: "workouts retrieved successfully",
+      workouts: rows
+    });
+
+  } catch (error) {
+    console.error("error in fetch workouts route:", error);
+    res.status(500).send("server error");
+  }
+});
+
+// Endpoint to fetch workouts by user ID and date range
+router.get("/search/by-user-date-range", async (req, res) => {
+  try {
+    const {user_id, start_date, end_date} = req.query;
+    
+    if(!user_id || !start_date || !end_date){
+      return res.status(400).json({ error: "user_id, start_date and end_date are required" });
+    }
+
+    if (isNaN(Number(user_id))) {
+      return res.status(400).json({ error: "user_id must be a number" });
+    }
+
+    if (isNaN(Date.parse(start_date)) || isNaN(Date.parse(end_date))) {
+      return res.status(400).json({ error: "start and end date must be valid dates" });
+    }
+
+    if (new Date(start_date) > new Date(end_date)) {
+      return res.status(400).json({ error: "start_date must be before or equal to end_date" });
+    }
+
+    const query = 'SELECT * FROM workouts WHERE user_id = ? AND workout_date BETWEEN ? AND ?'
+
+    const [rows] = await db.query(query, [user_id, start_date, end_date]);
+
+    res.json({
+      message: "workouts retrieved successfully",
+      workouts: rows
+    });
+
+  } catch (error) {
+    console.error("error in fetch workouts route:", error);
+    res.status(500).send("server error");
   }
 });
 
