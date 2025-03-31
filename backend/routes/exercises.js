@@ -2,6 +2,7 @@ import express from "express";
 import db from "../db.js";
 const router = express.Router();
 
+// add an exercise
 router.post("/add", async (req, res) => {
     try{
         const {
@@ -95,6 +96,70 @@ router.post("/add", async (req, res) => {
         console.error("Error in /add exercise route:", error);
         res.status(500).send("Server error");
     }
-  });
+});
+
+// update an existing exercise
+router.post("/update", async (req, res) => {
+    try {
+        const { exercise_id, intensity, exercise_type, calories_burned } = req.body;
+        let exercise_time, weight, sets, reps;
+        
+        if (!exercise_id || !intensity || !exercise_type) {
+            return res.status(400).json({ error: "exercise_id, intensity, and exercise_type are required" });
+        }
+        if (exercise_type !== "cardio" && exercise_type !== "strength training") {
+            return res.status(400).json({ error: "exercise_type must be 'cardio' or 'strength training'" });
+        }
+        if (calories_burned <= 0) {
+            return res.status(400).json({ error: "an exercise must have a positive int for calories_burned" });
+        }
+        
+        if (exercise_type === "cardio") {
+            exercise_time = req.body.exercise_time;
+            if (!exercise_time) {
+                return res.status(400).json({ error: "cardio exercises must have an exercise_time" });
+            }
+        }
+        
+        if (exercise_type === "strength training") {
+            weight = req.body.weight;
+            sets = req.body.sets;
+            reps = req.body.reps;
+            if (!weight || !sets || !reps) {
+                return res.status(400).json({ error: "strength training exercises must have weight, sets, and reps" });
+            }
+        }
+        
+        const updateQuery = `
+            UPDATE exercises
+            SET intensity = ?, exercise_type = ?, calories_burned = ?
+            WHERE exercise_id = ?
+        `;
+        await db.query(updateQuery, [intensity, exercise_type, calories_burned, exercise_id]);
+        
+        if (exercise_type === "cardio") {
+            const cardioUpdateQuery = `
+                UPDATE calisthenics_exercises
+                SET exercise_time = ?
+                WHERE exercise_id = ?
+            `;
+            await db.query(cardioUpdateQuery, [exercise_time, exercise_id]);
+        }
+        
+        if (exercise_type === "strength training") {
+            const strengthUpdateQuery = `
+                UPDATE weight_exercises
+                SET weight = ?, sets = ?, reps = ?
+                WHERE exercise_id = ?
+            `;
+            await db.query(strengthUpdateQuery, [weight, sets, reps, exercise_id]);
+        }
+        
+        res.json({ message: "Exercise updated successfully", exercise_id });
+    } catch (error) {
+        console.error("Error in /update exercise route:", error);
+        res.status(500).send("Server error");
+    }
+});
 
 export default router;
