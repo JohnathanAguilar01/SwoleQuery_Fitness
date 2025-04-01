@@ -55,9 +55,9 @@ CREATE TABLE weight_exercises (
 
 CREATE TABLE IF NOT EXISTS meals(
   meal_id int auto_increment PRIMARY KEY,
-  user_id int,
-  meal_date date,
-  calories int,
+  user_id int NOT NULL,
+  meal_date date NOT NULL,
+  calories int NOT NULL,
   protein decimal(6,2),
   carbs decimal(6,2),
   fats decimal(6,2),
