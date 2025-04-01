@@ -13,6 +13,39 @@ router.post("/signup", async (req, res) => {
         error: "Missing user input",
       });
     }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        error: "Invalid email format",
+      });
+    }
+
+    // Validate password strength (min 8 chars, at least one number and one letter)
+    if (
+      password.length < 8 ||
+      !/\d/.test(password) ||
+      !/[a-zA-Z]/.test(password)
+    ) {
+      return res.status(400).json({
+        error:
+          "Password must be at least 8 characters and contain at least one letter and one number",
+      });
+    }
+
+    // Check if username or email already exists
+    const [existingUsers] = await db.query(
+      "SELECT * FROM users WHERE username = ? OR email = ?",
+      [username, email],
+    );
+
+    if (existingUsers.length > 0) {
+      return res.status(409).json({
+        error: "Username or email already exists",
+      });
+    }
+
     const saltRounds = 10;
     const salted_password = await bcrypt.hash(password, saltRounds);
 
