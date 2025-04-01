@@ -17,15 +17,18 @@ router.get("/", async (req, res) => {
 
 router.get("/search/user", async (req, res) => {
   try {
-    const { user_id } = req.query;
+    let { user_id } = req.query;
 
     if (!user_id) {
       return res.status(400).json({ error: "user_id is required" });
     }
 
-    //if (!Number.isInteger(user_id)) {
-    //  return res.status(400).json({ error: "user_id is not a integer" });
-    //}
+    // Convert user_id to a number
+    user_id = parseInt(user_id, 10);
+
+    if (!Number.isInteger(user_id)) {
+      return res.status(400).json({ error: "user_id is not a integer" });
+    }
 
     const query = "SELECT * FROM progress WHERE user_id = ?";
     const [rows] = await db.query(query, [user_id]);
