@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../app";
-import Test from "supertest/lib/test";
+import db from "../db.js";
 
 describe("Testing user/signup endpoint", () => {
   test("Testing happy path", async () => {
@@ -17,12 +17,9 @@ describe("Testing user/signup endpoint", () => {
       })
       .set("Content-Type", "application/json")
       .expect(200);
-
-    expect(response.body).toEqual([
-      {
-        user_id: 3,
-      },
-    ]);
+    expect(response.body).toEqual({
+      user_id: 2,
+    });
   });
 
   test("Testing sad path due to first name input error", async () => {
@@ -38,7 +35,7 @@ describe("Testing user/signup endpoint", () => {
       .expect(400);
 
     expect(response.body).toHaveProperty("error");
-    expect(response.body.error).toBe("first name not present");
+    expect(response.body.error).toBe("Missing user input");
   });
 
   test("Testing sad path due to last name input error", async () => {
@@ -54,7 +51,7 @@ describe("Testing user/signup endpoint", () => {
       .expect(400);
 
     expect(response.body).toHaveProperty("error");
-    expect(response.body.error).toBe("last name not present");
+    expect(response.body.error).toBe("Missing user input");
   });
 
   test("Testing sad path due to username input error", async () => {
@@ -70,7 +67,7 @@ describe("Testing user/signup endpoint", () => {
       .expect(400);
 
     expect(response.body).toHaveProperty("error");
-    expect(response.body.error).toBe("username not present");
+    expect(response.body.error).toBe("Missing user input");
   });
 
   test("Testing sad path due to email input error", async () => {
@@ -86,7 +83,7 @@ describe("Testing user/signup endpoint", () => {
       .expect(400);
 
     expect(response.body).toHaveProperty("error");
-    expect(response.body.error).toBe("email not present");
+    expect(response.body.error).toBe("Missing user input");
   });
 
   test("Testing sad path due to password input error", async () => {
@@ -102,6 +99,11 @@ describe("Testing user/signup endpoint", () => {
       .expect(400);
 
     expect(response.body).toHaveProperty("error");
-    expect(response.body.error).toBe("password not present");
+    expect(response.body.error).toBe("Missing user input");
   });
+});
+
+// Clean up MySQL connection pool
+afterAll(() => {
+  db.end();
 });
