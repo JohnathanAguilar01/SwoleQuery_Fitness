@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import foodItemsRoutes from "./routes/food_items.js"; 
+import usersRoutes from "./routes/users.js";
+import foodItemsRoutes from "./routes/food_items.js";
 import progress from "./routes/progress.js";
 import workoutsRoutes from "./routes/workouts.js";
 import exercisesRoutes from "./routes/exercises.js";
@@ -20,13 +21,13 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-// Middleware
-
 app.use("/food_items", foodItemsRoutes);
 
 app.use("/progress", progress);
 
 app.use("/workouts", workoutsRoutes);
+
+app.use("/user", usersRoutes);
 
 app.use("/exercises", exercisesRoutes);
 
