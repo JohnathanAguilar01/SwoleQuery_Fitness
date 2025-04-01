@@ -18,7 +18,7 @@ describe("Testing user/signup endpoint", () => {
       .set("Content-Type", "application/json")
       .expect(200);
     expect(response.body).toEqual({
-      user_id: 2,
+      user_id: 3,
     });
   });
 
@@ -46,7 +46,7 @@ describe("Testing user/signup endpoint", () => {
         first_name: "Bruce",
         last_name: "Wayne",
         username: "batman",
-        email: "batman_email",
+        email: "batman@gmail.com",
         password: "imbatman",
       })
       .set("Content-Type", "application/json")
@@ -71,7 +71,7 @@ describe("Testing user/signup endpoint", () => {
         weight: "195.4",
       })
       .set("Content-Type", "application/json")
-      .expect(400);
+      .expect(409);
 
     expect(response.body).toHaveProperty("error");
     expect(response.body.error).toBe("Username or email already exists");
