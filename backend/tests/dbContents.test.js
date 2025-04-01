@@ -33,3 +33,9 @@ describe("Database Tables Snapshot", () => {
     expect(tables.length).toBeGreaterThan(0);
   });
 });
+
+// Clean up MySQL connection pool
+afterAll(() => {
+  db.end();
+});
+

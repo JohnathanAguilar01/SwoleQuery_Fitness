@@ -1,10 +1,10 @@
 import request from "supertest";
 import app from "../app";
-import db from "../db.js"; // for afterAll cleanup
+import db from "../db.js"; //for afterAll cleanup
 
 
 describe("/food_items/search/food", () => {
-  describe("positive tests", () => {
+  describe("Validate GET food_item by food_id with seeded food_item", () => {
     test("should return food item with food_id = 1", async () => {
       const response = await request(app)
         .get("/food_items/search/food")
@@ -20,7 +20,7 @@ describe("/food_items/search/food", () => {
 });
 
 describe("/food_items/search/meal", () => {
-  describe("positive tests", () => {
+  describe("Validate GET food_items by meal with seeded meal", () => {
     test("should return food items for meal_id = 1", async () => {
       const response = await request(app)
         .get("/food_items/search/meal")
@@ -40,7 +40,7 @@ describe("/food_items/add", () => {
   let proteinBarId;
   let soupId;
 
-  describe("positive tests", () => {
+  describe("Creates food item called Protein Bar", () => {
     test("should create food_item: Protein Bar with all macros", async () => {
       const response = await request(app)
         .post("/food_items/add")
@@ -103,7 +103,7 @@ describe("/food_items/add", () => {
     });
   });
 
-  describe("negative tests", () => {
+  describe("Test to POST bad request", () => {
     test("should return 400 for missing required fields", async () => {
       const response = await request(app)
         .post("/food_items/add")
@@ -136,6 +136,78 @@ describe("/food_items/add", () => {
     });
   });
 });
+
+describe("/food_items/update", () => {
+  let updateTestId;
+
+  // Create a food item before tests so we can update it
+  beforeAll(async () => {
+    const response = await request(app)
+      .post("/food_items/add")
+      .send({
+        meal_id: 1,
+        food_name: "Update Test Food",
+        quantity: 50,
+        unit: "grams",
+        calories: 100,
+      })
+      .set("Content-Type", "application/json");
+
+    updateTestId = response.body.food_id;
+  });
+
+  test("should update food_name and calories for food_id", async () => {
+    const response = await request(app)
+      .put("/food_items/update")
+      .send({
+        food_id: updateTestId,
+        food_name: "Updated Food Name",
+        calories: 150,
+      })
+      .set("Content-Type", "application/json")
+      .expect(200);
+
+    expect(response.body).toHaveProperty("message", "Food item updated successfully");
+  });
+
+  test("should return updated values on GET", async () => {
+    const response = await request(app)
+      .get("/food_items/search/food")
+      .query({ food_id: updateTestId })
+      .expect(200);
+
+    expect(response.body.food_item.food_name).toBe("Updated Food Name");
+    expect(Number(response.body.food_item.calories)).toBe(150);
+  });
+
+  test("should return 400 if no update fields are given", async () => {
+    const response = await request(app)
+      .put("/food_items/update")
+      .send({
+        food_id: updateTestId,
+      })
+      .set("Content-Type", "application/json")
+      .expect(400);
+
+    expect(response.body).toHaveProperty("error", "No fields to update");
+  });
+
+  test("should fetch items by user_id and date range", async () => {
+    const response = await request(app)
+      .get("/food_items/search/user_and_dates")
+      .query({
+        user_id: 1,
+        start_date: "2025-03-01",
+        end_date: "2025-12-31",
+      })
+      .expect(200);
+
+    expect(response.body).toHaveProperty("message", "Food items retrieved successfully");
+    expect(Array.isArray(response.body.food_items)).toBe(true);
+    expect(response.body.food_items.length).toBeGreaterThan(0);
+  });
+});
+
 
 // Clean up MySQL connection pool
 afterAll(() => {
