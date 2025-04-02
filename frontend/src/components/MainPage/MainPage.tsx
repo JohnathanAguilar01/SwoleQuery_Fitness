@@ -18,7 +18,7 @@ const MainPage: React.FC<MainPage> = ({ children }) => {
           <h1 className="inline font-bold text-2xl text-blue-500">Query</h1>
         </div>
         <div className="relative flex items-center justify-center w-full h-12">
-          <div className="absolute h-full z-1 bg-blue-100 border-r-blue-800 border-r-6 left-6 right-0 rounded-l-3xl" />
+          <div className="absolute h-full z-1 bg-blue-100 border-r-blue-800 border-r-[6px] left-6 right-0 rounded-l-3xl" />
           <MdSpaceDashboard size={30} className="z-10" />
           <h2 className="font-semibold text-xl ml-1 z-10">DashBoard</h2>
         </div>
