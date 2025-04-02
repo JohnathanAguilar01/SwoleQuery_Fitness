@@ -4,7 +4,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 
 interface MainPage {
-  component: React.ComponentType<any>; // or use generics for more strict props
+  children?: React.ReactNode;
 }
 
 const MainPage: React.FC<MainPage> = ({ children }) => {

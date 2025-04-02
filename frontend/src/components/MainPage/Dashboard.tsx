@@ -1,8 +1,4 @@
-interface DashBoard {
-  component: React.ComponentType<any>; // or use generics for more strict props
-}
-
-const DashBoard: React.FC<DashBoard> = () => {
+const DashBoard: React.FC = () => {
   return (
     <>
       {/* Meals sections */}
