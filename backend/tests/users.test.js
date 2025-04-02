@@ -158,6 +158,15 @@ describe("Testing user/signup endpoint", () => {
   });
 });
 
+describe("Tests for the /user/login endpoint", () => {
+  test("Test for the happy path for login", async () => {
+    const response = await request(app).post("/user/login").send({
+      username: "jondoe",
+      password: "password",
+    });
+  });
+});
+
 // Clean up MySQL connection pool
 afterAll(() => {
   db.end();
