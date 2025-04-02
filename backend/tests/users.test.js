@@ -160,9 +160,52 @@ describe("Testing user/signup endpoint", () => {
 
 describe("Tests for the /user/login endpoint", () => {
   test("Test for the happy path for login", async () => {
-    const response = await request(app).post("/user/login").send({
+    const response = await request(app)
+      .post("/user/login")
+      .send({
+        username: "jondoe",
+        password: "password1234",
+      })
+      .set("Content-Type", "application/json")
+      .expect(200);
+
+    expect(response.body).toEqual({
+      first_name: "John",
+      last_name: "Doe",
       username: "jondoe",
-      password: "password",
+      email: "johndoe@gmail.com",
+      height: "120.5",
+      weight: "190.4",
+    });
+  });
+
+  describe("Test sad path if username or password is Wrong", () => {
+    test("Test sad path if password is Wrong", async () => {
+      const response = await request(app)
+        .post("/user/login")
+        .send({
+          username: "jondoe",
+          password: "pass1234",
+        })
+        .set("Content-Type", "application/json")
+        .expect(401);
+
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toBe("Invalid Username or Password");
+    });
+
+    test("Test sad path if username is Wrong", async () => {
+      const response = await request(app)
+        .post("/user/login")
+        .send({
+          username: "johndoe",
+          password: "password1234",
+        })
+        .set("Content-Type", "application/json")
+        .expect(401);
+
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toBe("Invalid Username or Password");
     });
   });
 });
