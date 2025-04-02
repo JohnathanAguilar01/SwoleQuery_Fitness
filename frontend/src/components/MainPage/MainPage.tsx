@@ -7,9 +7,10 @@ interface MainPage {
   component: React.ComponentType<any>; // or use generics for more strict props
 }
 
-const MainPage: React.FC<MainPage> = ({ component: Component }) => {
+const MainPage: React.FC<MainPage> = ({ children }) => {
   return (
     <div className="flex justify-start w-screen h-screen bg-zinc-300">
+      {/* SideBar */}
       <div className="w-72 h-screen bg-white shadow-lg flex flex-col items-center">
         <div className="flex justify-center mt-2 mb-8">
           <FaRunning size={30} />
@@ -22,11 +23,13 @@ const MainPage: React.FC<MainPage> = ({ component: Component }) => {
           <h2 className="font-semibold text-xl ml-1 z-10">DashBoard</h2>
         </div>
       </div>
-      <div className="flex items-start w-full">
-        <div className="w-full h-14 bg-zinc-100 m-4 rounded-lg flex justify-end items-center">
+
+      {/* Topbar and wraped children */}
+      <div className="flex flex-col items-center w-full p-4">
+        <div className="w-full h-14 bg-zinc-100 rounded-lg flex justify-end items-center mb-6">
           <FaRegUserCircle size={40} className="mx-4" />
         </div>
-        {Component}
+        {children}
       </div>
     </div>
   );
