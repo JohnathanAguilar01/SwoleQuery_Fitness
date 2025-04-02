@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../app";
 import { response } from "express";
+import db from "../db";
 
 describe("Testing the progress route root and serach by user", () => {
   test("Checking root endpoint to get all progress data", async () => {
@@ -88,4 +89,9 @@ describe("Testing the /progress/add to add progress", () => {
       "user_id or weight are not correct data type",
     );
   });
+});
+
+// Clean up MySQL connection pool
+afterAll(() => {
+  db.end();
 });

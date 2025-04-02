@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../app";
+import db from "../db";
 
 describe("GET app.com/", () => {
   test('should return a message response with "Backend is running!"', async () => {
@@ -8,4 +9,9 @@ describe("GET app.com/", () => {
     expect(response.statusCode).toBe(200);
     expect(response.text).toBe("Backend is running!");
   });
+});
+
+// Clean up MySQL connection pool
+afterAll(() => {
+  db.end();
 });
