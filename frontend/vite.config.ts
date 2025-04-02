@@ -11,4 +11,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: "localhost", // optional; defaults to localhost
+    port: 3000,
+  },
 });
