@@ -1,6 +1,6 @@
-//backend/routes/food_items.js
+//backend/routes/meals.js
 /****************************\
-* Enpoint for food items     *
+* Enpoint for meals          *
 *                            *
 * Author:Alexander Boutselis *
 \****************************/
