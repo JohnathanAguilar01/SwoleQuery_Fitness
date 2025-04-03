@@ -178,6 +178,16 @@ describe("Tests for the /user/login endpoint", () => {
       weight: "190.4",
     });
   });
+  test("Testing sad path if a username or password is not passed", async () => {
+    const response = await request(app)
+      .post("user/login")
+      .send("")
+      .set("Content-Type", "application/json")
+      .expect(400);
+
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toBe("Missing user input");
+  });
 
   describe("Test sad path if username or password is Wrong", () => {
     test("Test sad path if password is Wrong", async () => {
