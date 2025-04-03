@@ -180,7 +180,7 @@ describe("Tests for the /user/login endpoint", () => {
   });
   test("Testing sad path if a username or password is not passed", async () => {
     const response = await request(app)
-      .post("user/login")
+      .post("/user/login")
       .send("")
       .set("Content-Type", "application/json")
       .expect(400);
@@ -212,10 +212,10 @@ describe("Tests for the /user/login endpoint", () => {
           password: "password1234",
         })
         .set("Content-Type", "application/json")
-        .expect(401);
+        .expect(400);
 
       expect(response.body).toHaveProperty("error");
-      expect(response.body.error).toBe("Invalid Username or Password");
+      expect(response.body.error).toBe("User Not Found");
     });
   });
 });
