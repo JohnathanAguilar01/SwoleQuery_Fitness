@@ -193,4 +193,41 @@ router.get("/search/exercise", async (req, res) => {
     }
 });
 
+router.get("/search/user-date-range", async (req, res) => {
+    try {
+        const { 
+            user_id,
+            start_date,
+            end_date,
+        } = req.body;
+        if (!user_id || !start_date || !end_date) {
+            return res.status(400).json({ error: "user_id, start_date, and end_date are required" });
+        }
+
+        const query = `
+            SELECT 
+                e.exercise_id,
+                e.intensity,
+                e.exercise_type,
+                e.calories_burned,
+                ce.exercise_time,
+                we.weight,
+                we.sets,
+                we.reps
+            FROM exercises e
+            JOIN workouts w ON e.workout_id = w.workout_id
+            LEFT JOIN calisthenics_exercises ce ON e.exercise_id = ce.exercise_id
+            LEFT JOIN weight_exercises we ON e.exercise_id = we.exercise_id
+            WHERE e.user_id = ?
+                AND w.workout_date BETWEEN ? AND ?
+        `;
+        
+        const [rows] = await db.query(query, [user_id, start_date, end_date]);
+        res.json({ exercises: rows });
+    } catch (error) {
+        console.error("Error in /search/user-date-range route:", error);
+        res.status(500).send("Server error");
+    }
+});
+
 export default router;
