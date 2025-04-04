@@ -71,4 +71,44 @@ router.post("/signup", async (req, res) => {
   }
 });
 
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({
+        error: "Missing user input",
+      });
+    }
+
+    const query = "SELECT * FROM users WHERE username = ?";
+    const [results] = await db.query(query, [username]);
+
+    if (results.length === 0) {
+      return res.status(400).json({ error: "User Not Found" });
+    }
+
+    const user = results[0];
+    const correct_user = await bcrypt.compare(password, user.password);
+
+    if (!correct_user) {
+      return res.status(401).json({ error: "Invalid Username or Password" });
+    }
+
+    res.status(200).json({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      username: user.username,
+      email: user.email,
+      height: user.height,
+      weight: user.weight,
+    });
+  } catch (error) {
+    console.error("Server Error:", error.message);
+    return res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
+});
+
 export default router;

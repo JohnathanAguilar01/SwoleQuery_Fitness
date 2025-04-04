@@ -8,6 +8,7 @@
     "start": "npm run start:backend & npm run start:frontend",
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
+    "dev:frontend": "cd frontend && npm run dev",
     "install:all": "npm install --prefix backend && npm install --prefix frontend",
     "lint": "eslint ./backend ./frontend/src",
     "format": "prettier --write ./backend ./frontend/src"
@@ -24,6 +25,7 @@
     "prettier": "^3.4.2"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "knex": "^3.1.0",
     "mysql2": "^3.11.5"
   }

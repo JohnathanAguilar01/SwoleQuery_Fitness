@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../app";
+import db from "../db";
 
 describe("/add", () => {
     describe("positive tests", () => {
@@ -391,4 +392,9 @@ describe("/search/user-date-range", () => {
             expect(response.body.error).toMatch("user_id, start_date, and end_date are required");
         });
     });
+});
+
+// Clean up MySQL connection pool
+afterAll(() => {
+  db.end();
 });
