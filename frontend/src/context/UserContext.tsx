@@ -2,12 +2,13 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type User = {
+  id: number;
   first_name: string;
   last_name: string;
   username: string;
   email: string;
-  height: string;
-  weight: string;
+  height: number;
+  weight: number;
 };
 
 type UserContextType = {

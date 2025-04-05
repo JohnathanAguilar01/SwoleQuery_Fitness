@@ -20,12 +20,7 @@ export default function Login() {
       // Replace with your actual API call
       // const response = await loginUser(username, password);
       // setUser(response.user);
-
       // Temporary mock for demonstration
-      setTimeout(() => {
-        setUser({ id: 1, username });
-        setIsLoading(false);
-      }, 1000);
     } catch (error) {
       setError("Invalid username or password");
       setIsLoading(false);
