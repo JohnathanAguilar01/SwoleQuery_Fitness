@@ -3,6 +3,7 @@ import { FaRunning } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useUser, User } from "@/context/UserContext";
+import { sleep } from "@/utils/utils";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function Login() {
@@ -11,10 +12,6 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { setUser } = useUser();
-
-  function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
