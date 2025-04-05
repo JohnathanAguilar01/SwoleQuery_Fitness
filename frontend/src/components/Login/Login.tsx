@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useUser, User } from "@/context/UserContext";
 import { sleep } from "@/utils/utils";
 const apiUrl = import.meta.env.VITE_API_URL;
+const loginUrl = new URL("/user/login", `http://${apiUrl}`);
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -20,10 +21,10 @@ export default function Login() {
     await sleep(1000); // pauses here for 1 second
 
     try {
-      const response = await fetch(`http://${apiUrl}/user/login`, {
+      const response = await fetch(loginUrl.toString(), {
         method: "POST",
         headers: {
-          "content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: username,
