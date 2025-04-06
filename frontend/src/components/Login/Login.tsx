@@ -2,7 +2,10 @@ import { Input } from "@/components/ui/input";
 import { FaRunning } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useUser } from "@/context/UserContext";
+import { useUser, User } from "@/context/UserContext";
+import { sleep } from "@/utils/utils";
+const apiUrl = import.meta.env.VITE_API_URL;
+const loginUrl = new URL("/user/login", `http://${apiUrl}`);
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -15,14 +18,34 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setIsLoading(true);
+    await sleep(1000); // pauses here for 1 second
 
     try {
-      // Replace with your actual API call
-      // const response = await loginUser(username, password);
-      // setUser(response.user);
-      // Temporary mock for demonstration
-    } catch (error) {
-      setError("Invalid username or password");
+      const response = await fetch(loginUrl.toString(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Unknown error");
+      }
+
+      const user = (await response.json()) as User;
+      setUser(user);
+      console.log(setUser);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
       setIsLoading(false);
     }
   };

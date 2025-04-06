@@ -1,14 +1,14 @@
 // src/context/UserContext.tsx
 import { createContext, useContext, useState, ReactNode } from "react";
 
-type User = {
+export type User = {
   id: number;
   first_name: string;
   last_name: string;
   username: string;
   email: string;
-  height: number;
-  weight: number;
+  height: string;
+  weight: string;
 };
 
 type UserContextType = {
