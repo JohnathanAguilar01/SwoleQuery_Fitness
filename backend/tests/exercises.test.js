@@ -8,7 +8,7 @@ describe("/add", () => {
             test("should successfully add an exercise, cardio", async () => {
               const response = await request(app).post("/exercises/add").send({
                     "user_id": 1,
-                    "workout_id": 9,
+                    "workout_id": 1,
                     "intensity": 25.00,
                     "exercise_type": "cardio",
                     "calories_burned": 250,
@@ -23,7 +23,7 @@ describe("/add", () => {
             test("should successfully add an exercise, strength", async () => {
                 const response = await request(app).post("/exercises/add").send({
                     "user_id": 1,
-                    "workout_id": 9,
+                    "workout_id": 1,
                     "intensity": 25.00,
                     "exercise_type": "strength training",
                     "calories_burned": 250,
@@ -56,7 +56,7 @@ describe("/add", () => {
             .post("/exercises/add")
             .send({
                 user_id: 1,
-                workout_id: 9,
+                workout_id: 1,
                 intensity: 25.0,
                 exercise_type: "yoga", // invalid exercise type
                 calories_burned: 250,
@@ -71,7 +71,7 @@ describe("/add", () => {
             .post("/exercises/add")
             .send({
                 user_id: 1,
-                workout_id: 9,
+                workout_id: 1,
                 intensity: 25.0,
                 exercise_type: "cardio",
                 calories_burned: 250,
@@ -88,7 +88,7 @@ describe("/add", () => {
                 .post("/exercises/add")
                 .send({
                 user_id: 1,
-                workout_id: 9,
+                workout_id: 1,
                 intensity: 25.0,
                 exercise_type: "strength training",
                 calories_burned: 250,
