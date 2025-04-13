@@ -25,13 +25,14 @@ export default function Signup() {
         await sleep(1000);
 
         try {
+            console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
             const response = await fetch(signupUrl.toString(), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    firs_tname : firstname,
+                    first_name : firstname,
                     last_name: lastname,
                     username: username,
                     email: email,
