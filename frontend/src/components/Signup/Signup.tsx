@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { sleep } from "@/utils/utils";
 const apiUrl = import.meta.env.VITE_API_URL;
-const signupUrl = new URL("/user/signup", `http://${apiUrl}`);
+const protocol = import.meta.env.PROD ? 'https' : 'http';
+const signupUrl = new URL("/user/signup", `${protocol}://${apiUrl}`);
 
 export default function Signup() {
     const [firstname, setFirstname] = useState("");
@@ -15,8 +16,8 @@ export default function Signup() {
     const [height, setHeight] = useState("");
     const [weight, setWeight] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [successfulSignup, setSuccessfulSignup] = useState(false);
     const [error, setError] = useState("");
-
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -25,7 +26,6 @@ export default function Signup() {
         await sleep(1000);
 
         try {
-            console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
             const response = await fetch(signupUrl.toString(), {
                 method: "POST",
                 headers: {
@@ -43,6 +43,7 @@ export default function Signup() {
             });
 
             setIsLoading(false);
+            setSuccessfulSignup(true);
 
             if(!response.ok){
                 const errorData = await response.json();
@@ -72,6 +73,7 @@ export default function Signup() {
                     </div>
                     <h1 className="text-center text-3xl font-semibold mb-4">SIGN UP</h1>
                     {error && <p className="text-red-500 mb-4">{error}</p>}
+                    {successfulSignup && <p className="text-green-500 mb-4">Signed Up!</p>}
                     <Input
                         type="text"
                         id="firstname"
@@ -100,7 +102,7 @@ export default function Signup() {
                         required
                     />
                     <Input
-                        type="text"
+                        type="email"
                         id="email"
                         placeholder="Email"
                         className="w-96 mx-auto my-4"
@@ -118,18 +120,18 @@ export default function Signup() {
                         required
                     />
                     <Input
-                        type="text"
+                        type="number"
                         id="height"
-                        placeholder="Height"
+                        placeholder="Height (cm)"
                         className="w-96 mx-auto my-4"
                         value={height}
                         onChange={(e) => setHeight(e.target.value)}
                         required
                     />
                     <Input
-                        type="text"
+                        type="number"
                         id="weight"
-                        placeholder="Weight"
+                        placeholder="Weight (kg)"
                         className="w-96 mx-auto my-4"
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}

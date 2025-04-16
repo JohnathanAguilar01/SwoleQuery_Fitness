@@ -27,6 +27,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "knex": "^3.1.0",
-    "mysql2": "^3.11.5"
+    "mysql2": "^3.11.5",
+    "react-router-dom": "^7.5.0"
   }
 }
