@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useUser, User } from "@/context/UserContext";
 import { sleep } from "@/utils/utils";
+import { Link } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
 const loginUrl = new URL("/user/login", `http://${apiUrl}`);
 
@@ -90,6 +91,14 @@ export default function Login() {
           >
             {isLoading ? "Logging in..." : "Login"}
           </Button>
+
+          <p className="mt-6 text-sm">
+            Need an account?{" "}
+            <Link to="/signup" className="text-blue-600 hover:underline">
+              Sign&nbsp;up
+            </Link>
+            .
+          </p>
         </form>
       </div>
     </>

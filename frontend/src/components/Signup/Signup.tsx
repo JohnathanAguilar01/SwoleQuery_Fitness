@@ -3,6 +3,7 @@ import { FaRunning } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { sleep } from "@/utils/utils";
+import { Link } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
 const protocol = import.meta.env.PROD ? 'https' : 'http';
 const signupUrl = new URL("/user/signup", `${protocol}://${apiUrl}`);
@@ -145,6 +146,13 @@ export default function Signup() {
                     >
                         {isLoading ? "Signing Up..." : "Signup"}
                     </Button>
+                    <p className="mt-6 text-sm">
+                        Already have an account?{" "}
+                        <Link to="/login" className="text-blue-600 hover:underline">
+                            Log&nbsp;in
+                        </Link>
+                        .
+                    </p>
                 </form>
             </div>
         </>
