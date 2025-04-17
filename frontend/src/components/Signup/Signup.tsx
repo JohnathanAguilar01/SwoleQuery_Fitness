@@ -1,9 +1,9 @@
 import { Input } from "@/components/ui/input";
 import { FaRunning } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { sleep } from "@/utils/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
 const protocol = import.meta.env.PROD ? 'https' : 'http';
 const signupUrl = new URL("/user/signup", `${protocol}://${apiUrl}`);
@@ -19,6 +19,15 @@ export default function Signup() {
     const [isLoading, setIsLoading] = useState(false);
     const [successfulSignup, setSuccessfulSignup] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (successfulSignup) {
+          const timer = setTimeout(() => navigate("/login"), 2000);
+      
+          return () => clearTimeout(timer);
+        }
+      }, [successfulSignup, navigate]);
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -43,13 +52,12 @@ export default function Signup() {
                 }),
             });
 
-            setIsLoading(false);
-            setSuccessfulSignup(true);
-
             if(!response.ok){
                 const errorData = await response.json();
                 throw new Error(errorData.error || "Unknown error");
             }
+            setSuccessfulSignup(true);
+            setIsLoading(false);
         }catch(err){
             if(err instanceof Error){
                 setError(err.message);
