@@ -1,33 +1,18 @@
-import { useUser } from "./context/UserContext";
-import MainPage from "./components/MainPage/MainPage";
-import DashBoard from "./components/MainPage/Dashboard";
+import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login/Login";
-import { Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./components/Signup/Signup";
+import AuthRoutes from "./components/AuthRoutes/AuthRoutes"; // 👈 the new wrapper component
 
 function App() {
-  const { user } = useUser();
-  
+
   return (
     <Routes>
       {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-  
-      {/* Catch‑all: if the user is logged in show the dashboard,
-          otherwise send them to /login */}
-      <Route
-        path="/*"
-        element={
-          user ? (
-            <MainPage>
-              <DashBoard />
-            </MainPage>
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
+
+      {/* Private/authenticated routes */}
+      <Route path="/*" element={<AuthRoutes />} />
     </Routes>
   );
 }

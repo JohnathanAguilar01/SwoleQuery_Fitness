@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { sleep } from "@/utils/utils";
 import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
 const apiUrl = import.meta.env.VITE_API_URL;
 const protocol = import.meta.env.PROD ? 'https' : 'http';
 const signupUrl = new URL("/user/signup", `${protocol}://${apiUrl}`);
@@ -20,6 +21,7 @@ export default function Signup() {
     const [successfulSignup, setSuccessfulSignup] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { setUser } = useUser(); // 👈 added here
 
     useEffect(() => {
         if (successfulSignup) {
@@ -56,6 +58,8 @@ export default function Signup() {
                 const errorData = await response.json();
                 throw new Error(errorData.error || "Unknown error");
             }
+            
+            setUser(null);
             setSuccessfulSignup(true);
             setIsLoading(false);
         }catch(err){
