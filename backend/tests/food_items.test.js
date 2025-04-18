@@ -1,6 +1,8 @@
+//docker exec -it swole-backend npm test tests/food_items.test.js
+
 import request from "supertest";
 import app from "../app";
-import db from "../db.js"; //for afterAll cleanup
+import db from "../db.js"; 
 
 
 describe("/food_items/search/food", () => {
