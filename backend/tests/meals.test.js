@@ -72,6 +72,70 @@ describe("/meals/add", () => {
   });
 });
 
+describe("/meals/update", () => {
+  let testMealId;
+  
+  beforeAll(async () => {
+    // Insert a test meal for update testing
+    const res = await request(app)
+    .post("/meals/add")
+    .send({
+      user_id: 1,
+      meal_date: "2025-04-01",
+      calories: 500,
+      notes: "Initial meal for update"
+    });
+    testMealId = res.body.meal_id;
+  });
+  
+  test("should update an existing meal's notes and calories", async () => {
+    const response = await request(app)
+    .put("/meals/update")
+    .send({
+      meal_id: testMealId,
+      calories: 650,
+      notes: "Updated notes"
+    })
+    .expect(200);
+    
+    expect(response.body).toHaveProperty("message", "Meal updated successfully");
+  });
+  
+  test("should return 400 if meal_id is missing", async () => {
+    const response = await request(app)
+    .put("/meals/update")
+    .send({
+      calories: 700
+    })
+    .expect(400);
+    
+    expect(response.body).toHaveProperty("error", "meal_id is required");
+  });
+  
+  test("should return 400 if no fields to update are provided", async () => {
+    const response = await request(app)
+    .put("/meals/update")
+    .send({ 
+      meal_id: testMealId 
+    })
+    .expect(400);
+    
+    expect(response.body).toHaveProperty("error", "No fields to update");
+  });
+  
+  test("should return 404 if meal does not exist", async () => {
+  const response = await request(app)
+  .put("/meals/update")
+  .send({
+    meal_id: 999999,
+    calories: 1000 
+  })
+  .expect(404);
+  
+  expect(response.body).toHaveProperty("error", "Meal not found");
+  });
+});
+
 // Close the DB pool after tests
 afterAll(() => {
   db.end();
