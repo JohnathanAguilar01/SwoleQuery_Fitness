@@ -1,8 +1,10 @@
 import { Input } from "@/components/ui/input";
 import { FaRunning } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { sleep } from "@/utils/utils";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
 const apiUrl = import.meta.env.VITE_API_URL;
 const protocol = import.meta.env.PROD ? 'https' : 'http';
 const signupUrl = new URL("/user/signup", `${protocol}://${apiUrl}`);
@@ -18,6 +20,16 @@ export default function Signup() {
     const [isLoading, setIsLoading] = useState(false);
     const [successfulSignup, setSuccessfulSignup] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const { setUser } = useUser(); // 👈 added here
+
+    useEffect(() => {
+        if (successfulSignup) {
+          const timer = setTimeout(() => navigate("/login"), 2000);
+      
+          return () => clearTimeout(timer);
+        }
+      }, [successfulSignup, navigate]);
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -42,13 +54,14 @@ export default function Signup() {
                 }),
             });
 
-            setIsLoading(false);
-            setSuccessfulSignup(true);
-
             if(!response.ok){
                 const errorData = await response.json();
                 throw new Error(errorData.error || "Unknown error");
             }
+            
+            setUser(null);
+            setSuccessfulSignup(true);
+            setIsLoading(false);
         }catch(err){
             if(err instanceof Error){
                 setError(err.message);
@@ -145,6 +158,13 @@ export default function Signup() {
                     >
                         {isLoading ? "Signing Up..." : "Signup"}
                     </Button>
+                    <p className="mt-6 text-sm">
+                        Already have an account?{" "}
+                        <Link to="/login" className="text-blue-600 hover:underline">
+                            Log&nbsp;in
+                        </Link>
+                        .
+                    </p>
                 </form>
             </div>
         </>

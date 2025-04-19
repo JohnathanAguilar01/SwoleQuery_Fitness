@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useUser, User } from "@/context/UserContext";
 import { sleep } from "@/utils/utils";
+import { Link, useNavigate } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
 const loginUrl = new URL("/user/login", `http://${apiUrl}`);
 
@@ -13,6 +14,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { setUser } = useUser();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ export default function Login() {
       const user = (await response.json()) as User;
       setUser(user);
       console.log(setUser);
+      navigate("/");
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -90,6 +93,14 @@ export default function Login() {
           >
             {isLoading ? "Logging in..." : "Login"}
           </Button>
+
+          <p className="mt-6 text-sm">
+            Need an account?{" "}
+            <Link to="/signup" className="text-blue-600 hover:underline">
+              Sign&nbsp;up
+            </Link>
+            .
+          </p>
         </form>
       </div>
     </>
