@@ -86,4 +86,78 @@ router.post("/add", async (req, res) => {
   }
 });
 
+
+/*
+* PUT /meals/update
+* Description: Updates a meal by meal_id. Accepts any combination of fields to update.
+* Required: meal_id
+*/
+router.put("/update", async (req, res) => {
+  try {
+    const { meal_id, user_id, meal_date, meal_type, calories, protein, carbs, fats, notes } = req.body;
+    
+    if (!meal_id) {
+      return res.status(400).json({ error: "meal_id is required" });
+    }
+    
+    const updates = [];
+    const values = [];
+    
+    if (user_id !== undefined) {
+      updates.push("user_id = ?");
+      values.push(user_id);
+    }
+    if (meal_date !== undefined) {
+      updates.push("meal_date = ?");
+      values.push(meal_date);
+    }
+    if (meal_type !== undefined) {
+      updates.push("meal_type = ?");
+      values.push(meal_type);
+    }
+    if (calories !== undefined) {
+      updates.push("calories = ?");
+      values.push(calories);
+    }
+    if (protein !== undefined) {
+      updates.push("protein = ?");
+      values.push(protein);
+    }
+    if (carbs !== undefined) {
+      updates.push("carbs = ?");
+      values.push(carbs);
+    }
+    if (fats !== undefined) {
+      updates.push("fats = ?");
+      values.push(fats);
+    }
+    if (notes !== undefined) {
+      updates.push("notes = ?");
+      values.push(notes);
+    }
+    
+    if (updates.length === 0) {
+      return res.status(400).json({ error: "No fields to update" });
+    }
+    
+    const updateQuery = `
+      UPDATE meals
+      SET ${updates.join(", ")}
+      WHERE meal_id = ?
+    `;
+    
+    values.push(meal_id);
+    const [result] = await db.query(updateQuery, values);
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Meal not found" });
+    }
+    
+    res.status(200).json({ message: "Meal updated successfully" });
+  } catch (error) {
+    console.error("Error updating meal:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;
