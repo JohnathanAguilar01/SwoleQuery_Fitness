@@ -1,26 +1,49 @@
 // Define the type for the incoming component
 import { FaRunning } from "react-icons/fa";
 import { FaRegUserCircle } from "react-icons/fa";
-import { MdSpaceDashboard } from "react-icons/md";
+import { MdSpaceDashboard, MdOutlineMenuBook } from "react-icons/md";
 
-interface MainPage {
-  children?: React.ReactNode;
-}
+type MainPageProps = {
+  children: React.ReactNode;
+  setActiveTab: (tab: "dashboard" | "logs") => void;
+  activeTab: "dashboard" | "logs";
+};
 
-const MainPage: React.FC<MainPage> = ({ children }) => {
+function MainPage({ children, setActiveTab, activeTab }: MainPageProps) {
   return (
     <div className="flex justify-start w-screen h-screen bg-zinc-300">
       {/* SideBar */}
       <div className="w-72 h-screen bg-white shadow-lg flex flex-col items-center">
+        {/* App name */}
         <div className="flex justify-center mt-2 mb-8">
           <FaRunning size={30} />
           <h1 className="inline font-bold text-2xl">Swole</h1>
           <h1 className="inline font-bold text-2xl text-blue-500">Query</h1>
         </div>
-        <div className="relative flex items-center justify-center w-full h-12">
-          <div className="absolute h-full z-1 bg-blue-100 border-r-blue-800 border-r-[6px] left-6 right-0 rounded-l-3xl" />
-          <MdSpaceDashboard size={30} className="z-10" />
-          <h2 className="font-semibold text-xl ml-1 z-10">DashBoard</h2>
+        {/* Sidebar tabs */}
+        <div
+          className="relative flex items-center w-full h-12 mb-2"
+          onClick={() => setActiveTab("dashboard")}
+        >
+          {activeTab === "dashboard" && (
+            <div className="absolute h-full z-1 bg-blue-100 border-r-blue-800 border-r-[6px] left-6 right-0 rounded-l-3xl" />
+          )}
+          <div className="absolute flex left-14 z-10">
+            <MdSpaceDashboard size={30} className="z-10" />
+            <h2 className="font-semibold text-xl ml-1 z-10">DashBoard</h2>
+          </div>
+        </div>
+        <div
+          className="relative flex items-center w-full h-12 bg-red-5 mb-2"
+          onClick={() => setActiveTab("logs")}
+        >
+          {activeTab === "logs" && (
+            <div className="absolute h-full z-1 bg-blue-100 border-r-blue-800 border-r-[6px] left-6 right-0 rounded-l-3xl" />
+          )}
+          <div className="absolute flex left-14 z-10">
+            <MdOutlineMenuBook size={30} />
+            <h2 className="font-semibold text-xl ml-1">Logs</h2>
+          </div>
         </div>
       </div>
 
@@ -33,6 +56,6 @@ const MainPage: React.FC<MainPage> = ({ children }) => {
       </div>
     </div>
   );
-};
+}
 
 export default MainPage;
