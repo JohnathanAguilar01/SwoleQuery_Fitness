@@ -39,15 +39,23 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
       <div className="flex justify-center h-8 bg-zinc-100 rounded-t-lg">
         <h2 className="font-semibold text-xl">Workouts</h2>
       </div>
-      {workouts.map((workout) => (
-        <div
-          key={workout.workout_id}
-          className="flex justify-between p-4 bg-white shadow border border-gray-200"
-        >
-          <p className="text-lg font-bold">Workout #{workout.workout_id}</p>
-          <p className="mt-2 w-200 line-clamp-4">Notes: {workout.notes}</p>
+      {workouts.length > 0 ? (
+        workouts.map((workout) => (
+          <div
+            key={workout.workout_id}
+            className="flex justify-between p-4 bg-white shadow border border-gray-200"
+          >
+            <p className="text-lg font-bold">Workout #{workout.workout_id}</p>
+            <p className="mt-2 w-[200px] line-clamp-4">
+              Notes: {workout.notes}
+            </p>
+          </div>
+        ))
+      ) : (
+        <div className="flex justify-center p-4 bg-white">
+          <p className="text-gray-500">No workouts found for this date</p>
         </div>
-      ))}
+      )}{" "}
       <div className="flex justify-center h-8 bg-zinc-100 rounded-b-lg">
         <h2 className="font-semibold text-blue-500 text-lg">ADD</h2>
       </div>
