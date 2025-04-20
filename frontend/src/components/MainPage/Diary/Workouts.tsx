@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
+import Modal from "@/components/other/Modal";
+import AddWorkout from "./AddWorkout";
+import { setDate } from "date-fns";
 
 type WorkoutsProps = {
   date: string;
@@ -15,6 +18,8 @@ type Workout = {
 const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
   const { user } = useUser();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
 
   useEffect(() => {
     const apiUrl = `http://${import.meta.env.VITE_API_URL}/workouts/search/by-user-date-single`;
@@ -32,7 +37,7 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
       })
       .then((data) => setWorkouts(data.workouts))
       .catch((error) => console.error("Error fetching workouts:", error));
-  }, [user?.id, date]);
+  }, [user?.id, date, isAddOpen]);
 
   return (
     <div className="w-full bg-white rounded-lg mb-4">
@@ -45,7 +50,12 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
             key={workout.workout_id}
             className="flex justify-between p-4 bg-white shadow border border-gray-200"
           >
-            <p className="text-lg font-bold">Workout #{workout.workout_id}</p>
+            <p
+              className="text-lg font-bold"
+              onClick={() => setSelectedWorkout(workout)}
+            >
+              Workout #{workout.workout_id}
+            </p>
             <p className="mt-2 w-[200px] line-clamp-4">
               Notes: {workout.notes}
             </p>
@@ -57,8 +67,31 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
         </div>
       )}{" "}
       <div className="flex justify-center h-8 bg-zinc-100 rounded-b-lg">
-        <h2 className="font-semibold text-blue-500 text-lg">ADD</h2>
+        <h2
+          className="font-semibold text-blue-500 text-lg"
+          onClick={() => setIsAddOpen(true)}
+        >
+          ADD
+        </h2>
       </div>
+      {/* Modal for adding workout */}
+      <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}>
+        <AddWorkout date={date} onClose={() => setIsAddOpen(false)} />
+      </Modal>
+      {/* Modal for showing workouts */}
+      <Modal
+        isOpen={!!selectedWorkout}
+        onClose={() => setSelectedWorkout(null)}
+      >
+        {selectedWorkout && (
+          <div className="space-y-3">
+            <p className="text-lg font-semibold">
+              Workout #{selectedWorkout.workout_id}
+            </p>
+            <p className="text-base">Notes: {selectedWorkout.notes}</p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
