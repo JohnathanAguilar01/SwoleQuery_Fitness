@@ -4,7 +4,6 @@ import Signup from "./components/Signup/Signup";
 import AuthRoutes from "./components/AuthRoutes/AuthRoutes"; // 👈 the new wrapper component
 
 function App() {
-
   return (
     <Routes>
       {/* Public routes */}
@@ -18,3 +17,4 @@ function App() {
 }
 
 export default App;
+
