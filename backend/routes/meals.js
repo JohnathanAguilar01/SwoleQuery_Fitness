@@ -60,9 +60,9 @@ router.post("/add", async (req, res) => {
     //Build INSERT query for meals
     const insertQuery = `
       INSERT INTO meals (
-        user_id, meal_date, calories, protein, carbs, fats, notes
+      user_id, meal_date, calories, protein, carbs, fats, notes
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
+      `;
 
     //Send query and handle response
     const [result] = await db.query(insertQuery, [
@@ -156,6 +156,66 @@ router.put("/update", async (req, res) => {
     res.status(200).json({ message: "Meal updated successfully" });
   } catch (error) {
     console.error("Error updating meal:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+/**
+ * GET /meals/:userId/range
+ * Description: Returns all meals for a user between two dates (inclusive).
+ * Required query params: start (yyyy-mm-dd), end (yyyy-mm-dd)
+ */
+router.get("/:userId/range", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { start, end } = req.query;
+    
+    if (!start || !end) {
+      return res.status(400).json({ error: "Start and end dates are required" });
+    }
+    
+    const query = `
+      SELECT * FROM meals
+      WHERE user_id = ?
+      AND meal_date BETWEEN ? AND ?
+      ORDER BY meal_date ASC
+      `;
+    
+    const [rows] = await db.query(query, [userId, start, end]);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching meals by date range:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+/**
+* GET /meals/:userId/day
+* Description: Returns all meals for a user on a specific date.
+* Required query param: date (yyyy-mm-dd)
+*/
+router.get("/:userId/day", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { date } = req.query;
+  
+    if (!date) {
+      return res.status(400).json({ error: "Date is required" });
+    }
+  
+    const query = `
+      SELECT * FROM meals
+      WHERE user_id = ?
+      AND meal_date = ?
+      ORDER BY meal_date ASC
+      `;
+  
+    const [rows] = await db.query(query, [userId, date]);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching meals by specific date:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

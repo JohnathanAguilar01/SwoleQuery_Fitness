@@ -1,3 +1,4 @@
+//docker exec -it swole-backend npm test tests/meals.test.js
 import request from "supertest";
 import app from "../app";
 import db from "../db.js";
@@ -23,6 +24,7 @@ describe("/meals/add", () => {
       expect(response.body).toHaveProperty("meal_id");
     });
   });
+
 
   describe("Negative test: missing required fields", () => {
     test("should return 400 if user_id is missing", async () => {
@@ -52,6 +54,7 @@ describe("/meals/add", () => {
     });
   });
 
+
   describe("Negative test: invalid data types", () => {
     test("should return 400 if protein is not a number", async () => {
       const response = await request(app)
@@ -71,6 +74,7 @@ describe("/meals/add", () => {
     });
   });
 });
+
 
 describe("/meals/update", () => {
   let testMealId;
@@ -133,6 +137,59 @@ describe("/meals/update", () => {
   .expect(404);
   
   expect(response.body).toHaveProperty("error", "Meal not found");
+  });
+});
+
+
+describe("/meals/:userId/range", () => {
+  test("should return meals in valid date range", async () => {
+    const response = await request(app)
+      .get("/meals/1/range?start=2025-03-01&end=2025-04-30")
+      .expect(200);
+
+    expect(Array.isArray(response.body)).toBe(true);
+  });
+
+  test("should return 400 if start or end date is missing", async () => {
+    const response = await request(app)
+      .get("/meals/1/range?start=2025-03-01")
+      .expect(400);
+
+    expect(response.body).toHaveProperty("error", "Start and end dates are required");
+  });
+
+  test("should return empty array if no meals in range", async () => {
+    const response = await request(app)
+      .get("/meals/1/range?start=1999-01-01&end=1999-01-02")
+      .expect(200);
+
+    expect(response.body).toEqual([]);
+  });
+});
+
+describe("/meals/:userId/day", () => {
+  test("should return meals on a specific valid date", async () => {
+    const response = await request(app)
+      .get("/meals/1/day?date=2025-03-30")
+      .expect(200);
+
+    expect(Array.isArray(response.body)).toBe(true);
+  });
+
+  test("should return 400 if date is missing", async () => {
+    const response = await request(app)
+      .get("/meals/1/day")
+      .expect(400);
+
+    expect(response.body).toHaveProperty("error", "Date is required");
+  });
+
+  test("should return empty array if no meals on that day", async () => {
+    const response = await request(app)
+      .get("/meals/1/day?date=1999-01-01")
+      .expect(200);
+
+    expect(response.body).toEqual([]);
   });
 });
 
