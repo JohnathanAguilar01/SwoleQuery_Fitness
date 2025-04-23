@@ -16,7 +16,7 @@ const Diary: React.FC = () => {
     <>
       <DatePicker date={date} setDate={setDate} />
       <Workouts date={dateString} />
-      <Meals />
+      <Meals date={dateString} />
     </>
   );
 };
