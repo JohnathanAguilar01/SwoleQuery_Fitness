@@ -38,7 +38,7 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
       })
       .then((data) => setWorkouts(data.workouts))
       .catch((error) => console.error("Error fetching workouts:", error));
-  }, [user?.id, date, isAddOpen]);
+  }, [user?.id, date, isAddOpen, selectedWorkout]);
 
   return (
     <div className="w-full bg-white rounded-lg mb-4">
@@ -74,8 +74,8 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
         </h2>
       </div>
       {/* Modal for adding workout */}
-      <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}>
-        <AddWorkout date={date} onClose={() => setIsAddOpen(false)} />
+      <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(!isAddOpen)}>
+        <AddWorkout date={date} onClose={() => setIsAddOpen(!isAddOpen)} />
       </Modal>
       {/* Modal for showing workouts */}
       <Modal
