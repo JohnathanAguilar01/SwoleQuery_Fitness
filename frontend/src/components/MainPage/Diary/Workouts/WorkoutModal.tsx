@@ -36,10 +36,6 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ selectedWorkout }) => {
       .catch((error) => console.error("Error fetching workouts:", error));
   }, [selectedWorkout, isAddExerciseOpen]);
 
-  const addExercise = () => {
-    setIsAddExerciseOpen(!isAddExerciseOpen);
-  };
-
   const onUpdate = async () => {
     const urlWithParams = `${apiUrl}/workouts/update`;
     try {
