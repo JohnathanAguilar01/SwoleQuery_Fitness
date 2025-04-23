@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
 import Modal from "@/components/other/Modal";
 import AddWorkout from "./AddWorkout";
-import { setDate } from "date-fns";
 import WorkoutModal from "./WorkoutModal";
 
 type WorkoutsProps = {
