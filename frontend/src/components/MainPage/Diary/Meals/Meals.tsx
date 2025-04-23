@@ -19,7 +19,7 @@ export type Meal = {
   notes: string;
 };
 
-const Workouts: React.FC<MealsProps> = ({ date }) => {
+const Meals: React.FC<MealsProps> = ({ date }) => {
   const { user } = useUser();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
@@ -92,4 +92,4 @@ const Workouts: React.FC<MealsProps> = ({ date }) => {
   );
 };
 
-export default Workouts;
+export default Meals;
