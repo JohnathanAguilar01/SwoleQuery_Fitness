@@ -3,12 +3,13 @@ import { useUser } from "@/context/UserContext";
 import Modal from "@/components/other/Modal";
 import AddWorkout from "./AddWorkout";
 import { setDate } from "date-fns";
+import WorkoutModal from "./WorkoutModal";
 
 type WorkoutsProps = {
   date: string;
 };
 
-type Workout = {
+export type Workout = {
   workout_id: number;
   user_id: number;
   workout_date: string; // ISO string, can be parsed into a Date
@@ -54,11 +55,9 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
               className="text-lg font-bold"
               onClick={() => setSelectedWorkout(workout)}
             >
-              Workout #{workout.workout_id}
+              Workout {workout.workout_id}
             </p>
-            <p className="mt-2 w-[200px] line-clamp-4">
-              Notes: {workout.notes}
-            </p>
+            <p className="mt-2 w-150 line-clamp-4">Notes: {workout.notes}</p>
           </div>
         ))
       ) : (
@@ -83,14 +82,7 @@ const Workouts: React.FC<WorkoutsProps> = ({ date }) => {
         isOpen={!!selectedWorkout}
         onClose={() => setSelectedWorkout(null)}
       >
-        {selectedWorkout && (
-          <div className="space-y-3">
-            <p className="text-lg font-semibold">
-              Workout #{selectedWorkout.workout_id}
-            </p>
-            <p className="text-base">Notes: {selectedWorkout.notes}</p>
-          </div>
-        )}
+        {selectedWorkout && <WorkoutModal selectedWorkout={selectedWorkout} />}
       </Modal>
     </div>
   );
