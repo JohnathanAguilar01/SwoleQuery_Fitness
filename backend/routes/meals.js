@@ -9,7 +9,6 @@ import express from "express";
 import db from "../db.js";
 const router = express.Router();
 
-
 /*
 CREATE TABLE IF NOT EXISTS meals(
   meal_id int auto_increment PRIMARY KEY,
@@ -21,7 +20,6 @@ CREATE TABLE IF NOT EXISTS meals(
   fats decimal(6,2),
   notes varchar(256),
 */
-
 
 /**
  * INSERT /meals/add
@@ -54,7 +52,9 @@ router.post("/add", async (req, res) => {
       (carbs !== null && isNaN(Number(carbs))) ||
       (fats !== null && isNaN(Number(fats)))
     ) {
-      return res.status(400).json({ error: "One or more fields have invalid data types" });
+      return res
+        .status(400)
+        .json({ error: "One or more fields have invalid data types" });
     }
 
     //Build INSERT query for meals
@@ -79,30 +79,37 @@ router.post("/add", async (req, res) => {
       message: "Meal added successfully",
       meal_id: result.insertId,
     });
-
   } catch (error) {
     console.error("Error adding meal:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-
 /*
-* PUT /meals/update
-* Description: Updates a meal by meal_id. Accepts any combination of fields to update.
-* Required: meal_id
-*/
+ * PUT /meals/update
+ * Description: Updates a meal by meal_id. Accepts any combination of fields to update.
+ * Required: meal_id
+ */
 router.put("/update", async (req, res) => {
   try {
-    const { meal_id, user_id, meal_date, meal_type, calories, protein, carbs, fats, notes } = req.body;
-    
+    const {
+      meal_id,
+      user_id,
+      meal_date,
+      calories,
+      protein,
+      carbs,
+      fats,
+      notes,
+    } = req.body;
+
     if (!meal_id) {
       return res.status(400).json({ error: "meal_id is required" });
     }
-    
+
     const updates = [];
     const values = [];
-    
+
     if (user_id !== undefined) {
       updates.push("user_id = ?");
       values.push(user_id);
@@ -110,10 +117,6 @@ router.put("/update", async (req, res) => {
     if (meal_date !== undefined) {
       updates.push("meal_date = ?");
       values.push(meal_date);
-    }
-    if (meal_type !== undefined) {
-      updates.push("meal_type = ?");
-      values.push(meal_type);
     }
     if (calories !== undefined) {
       updates.push("calories = ?");
@@ -135,31 +138,30 @@ router.put("/update", async (req, res) => {
       updates.push("notes = ?");
       values.push(notes);
     }
-    
+
     if (updates.length === 0) {
       return res.status(400).json({ error: "No fields to update" });
     }
-    
+
     const updateQuery = `
       UPDATE meals
       SET ${updates.join(", ")}
       WHERE meal_id = ?
     `;
-    
+
     values.push(meal_id);
     const [result] = await db.query(updateQuery, values);
-    
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Meal not found" });
     }
-    
+
     res.status(200).json({ message: "Meal updated successfully" });
   } catch (error) {
     console.error("Error updating meal:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 /**
  * GET /meals/:userId/range
@@ -170,18 +172,20 @@ router.get("/:userId/range", async (req, res) => {
   try {
     const { userId } = req.params;
     const { start, end } = req.query;
-    
+
     if (!start || !end) {
-      return res.status(400).json({ error: "Start and end dates are required" });
+      return res
+        .status(400)
+        .json({ error: "Start and end dates are required" });
     }
-    
+
     const query = `
       SELECT * FROM meals
       WHERE user_id = ?
       AND meal_date BETWEEN ? AND ?
       ORDER BY meal_date ASC
       `;
-    
+
     const [rows] = await db.query(query, [userId, start, end]);
     res.status(200).json(rows);
   } catch (error) {
@@ -190,28 +194,27 @@ router.get("/:userId/range", async (req, res) => {
   }
 });
 
-
 /**
-* GET /meals/:userId/day
-* Description: Returns all meals for a user on a specific date.
-* Required query param: date (yyyy-mm-dd)
-*/
+ * GET /meals/:userId/day
+ * Description: Returns all meals for a user on a specific date.
+ * Required query param: date (yyyy-mm-dd)
+ */
 router.get("/:userId/day", async (req, res) => {
   try {
     const { userId } = req.params;
     const { date } = req.query;
-  
+
     if (!date) {
       return res.status(400).json({ error: "Date is required" });
     }
-  
+
     const query = `
       SELECT * FROM meals
       WHERE user_id = ?
       AND meal_date = ?
       ORDER BY meal_date ASC
       `;
-  
+
     const [rows] = await db.query(query, [userId, date]);
     res.status(200).json(rows);
   } catch (error) {
@@ -221,3 +224,4 @@ router.get("/:userId/day", async (req, res) => {
 });
 
 export default router;
+
