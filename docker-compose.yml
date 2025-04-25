@@ -34,6 +34,8 @@ services:
   db:
     image: mysql:latest
     container_name: swole-db
+    ports:
+      - 3306:3306
     secrets:
       - db-root-password
     volumes:

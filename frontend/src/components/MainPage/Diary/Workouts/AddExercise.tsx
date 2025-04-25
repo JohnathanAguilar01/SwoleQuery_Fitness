@@ -66,7 +66,7 @@ const AddExercise: React.FC<AddExerciseProps> = ({ workoutId, onClose }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <h1 className="font-bold mx-auto w-fit mb-4 text-xl">New Exercise</h1>
 
       <Select
