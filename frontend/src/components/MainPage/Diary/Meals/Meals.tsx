@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
 import Modal from "@/components/other/Modal";
 import MealModal from "./MealModal";
-// import AddWorkout from "./AddWorkout";
+import AddMeal from "./AddMeal";
 
 type MealsProps = {
   date: string;
@@ -78,10 +78,7 @@ const Meals: React.FC<MealsProps> = ({ date }) => {
       </div>
       {/* Modal for adding workout */}
       <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(!isAddOpen)}>
-        {/*
-        <AddWorkout date={date} onClose={() => setIsAddOpen(!isAddOpen)} />
-        */}
-        <h1>add meal</h1>
+        <AddMeal date={date} onClose={() => setIsAddOpen(!isAddOpen)} />
       </Modal>
       {/* Modal for showing workouts */}
       <Modal isOpen={!!selectedMeal} onClose={() => setSelectedMeal(null)}>
