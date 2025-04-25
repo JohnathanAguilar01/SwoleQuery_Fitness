@@ -14,10 +14,10 @@ type AddMealProps = {
 const AddMeal: React.FC<AddMealProps> = ({ date, onClose }) => {
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
-  const [calories, setCalories] = useState<number | null>(null);
-  const [protein, setProtein] = useState<number | null>(null);
-  const [carbs, setCarbs] = useState<number | null>(null);
-  const [fats, setFats] = useState<number | null>(null);
+  const [calories, setCalories] = useState<string | null>(null);
+  const [protein, setProtein] = useState<string | null>(null);
+  const [carbs, setCarbs] = useState<string | null>(null);
+  const [fats, setFats] = useState<string | null>(null);
   const { user } = useUser();
 
   const onAdd = async () => {

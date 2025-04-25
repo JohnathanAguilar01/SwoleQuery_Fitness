@@ -224,4 +224,3 @@ router.get("/:userId/day", async (req, res) => {
 });
 
 export default router;
-

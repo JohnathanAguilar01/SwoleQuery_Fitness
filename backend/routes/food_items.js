@@ -9,7 +9,6 @@ import express from "express";
 import db from "../db.js";
 const router = express.Router();
 
-
 /*
  * SELECT /food_items/search/food?food_id=1
  * Description: Returns a single food item by its ID
@@ -43,7 +42,6 @@ router.get("/search/food", async (req, res) => {
   }
 });
 
-
 /*
  * SELECT /food_items/search/by_user_and_date?user_id=[User_ID]&start_date=[Start_date]&end_date=[End_Date]
  * Description: Returns all food items that belong to a specific user between the selected start and end dates
@@ -54,7 +52,9 @@ router.get("/search/user_and_dates", async (req, res) => {
 
     //Validate user_id, start_date, and end_date
     if (!user_id || !start_date || !end_date) {
-      return res.status(400).json({ error: "user_id, start_date, and end_date are required" });
+      return res
+        .status(400)
+        .json({ error: "user_id, start_date, and end_date are required" });
     }
 
     //Validate that user_id is a number
@@ -75,7 +75,6 @@ router.get("/search/user_and_dates", async (req, res) => {
     //Execute the SQL query using parameterized values to prevent SQL injection
     const [rows] = await db.query(query, [user_id, start_date, end_date]);
 
-    
     //Response will always be 200 even if no food items are found, return an empty array
     res.status(200).json({
       message: "Food items retrieved successfully",
@@ -87,7 +86,6 @@ router.get("/search/user_and_dates", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 /**
  * SELECT /food_items/search/meal?meal_id=1
@@ -119,14 +117,12 @@ router.get("/search/meal", async (req, res) => {
       message: "Food items retrieved successfully",
       food_items: rows,
     });
-
   } catch (error) {
     //Catch and log any unexpected errors from the DB or server
     console.error("Error fetching food items by meal_id:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 /**
  * INSERT /food_items/add
@@ -162,7 +158,9 @@ router.post("/add", async (req, res) => {
       (carbs !== null && isNaN(Number(carbs))) ||
       (fats !== null && isNaN(Number(fats)))
     ) {
-      return res.status(400).json({ error: "One or more fields have invalid data types" });
+      return res
+        .status(400)
+        .json({ error: "One or more fields have invalid data types" });
     }
 
     //SQL query to insert new food item into the database
@@ -189,13 +187,11 @@ router.post("/add", async (req, res) => {
       message: "Food item added successfully",
       food_id: result.insertId,
     });
-
   } catch (error) {
     console.error("Error adding food item:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 /*
  * UPDATE /food_items/update
@@ -289,7 +285,6 @@ router.put("/update", async (req, res) => {
   }
 });
 
-
 /**
  * DELETE /food_items/delete?food_id=1
  * Description: Deletes a food item by its ID (food_id).
@@ -319,20 +314,18 @@ router.delete("/delete", async (req, res) => {
     //Step 4: Check if anything was deleted
     if (result.affectedRows === 0) {
       // Nothing matched that ID
-      return res.status(404).json({ error: "Food item not found or already deleted" });
+      return res
+        .status(404)
+        .json({ error: "Food item not found or already deleted" });
     }
 
     //Step 5: Success
     res.status(200).json({ message: "Food item deleted successfully" });
-
   } catch (error) {
     //If we hit this block, something exploded
     console.error("Error deleting food item:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
 
 export default router;
