@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/other/Modal";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-// import AddExercise from "./AddExercise";
+import AddFoodItem from "./AddFoodItem";
 const apiUrl = `http://${import.meta.env.VITE_API_URL}`;
 
 type MealModalProps = {
@@ -223,13 +223,10 @@ const MealModal: React.FC<MealModalProps> = ({ selectedMeal }) => {
         isOpen={isAddFoodItemOpen}
         onClose={() => setIsAddFoodItemOpen(!isAddFoodItemOpen)}
       >
-        <h1>add food item</h1>
-        {/*
-        <AddExercise
-          workoutId={selectedWorkout.workout_id}
-          onClose={() => setIsAddExerciseOpen(!isAddExerciseOpen)}
+        <AddFoodItem
+          mealId={selectedMeal.meal_id}
+          onClose={() => setIsAddFoodItemOpen(!isAddFoodItemOpen)}
         />
-        */}
       </Modal>
     </>
   );
