@@ -1,6 +1,7 @@
 // Define the type for the incoming component
 import { FaRunning } from "react-icons/fa";
 import { FaRegUserCircle } from "react-icons/fa";
+import { useUser } from "@/context/UserContext";
 import { MdSpaceDashboard, MdOutlineMenuBook } from "react-icons/md";
 
 type MainPageProps = {
@@ -10,6 +11,8 @@ type MainPageProps = {
 };
 
 function MainPage({ children, setActiveTab, activeTab }: MainPageProps) {
+  const { user } = useUser();
+
   return (
     <div className="flex justify-start w-screen h-screen bg-zinc-300">
       {/* SideBar */}
@@ -50,7 +53,14 @@ function MainPage({ children, setActiveTab, activeTab }: MainPageProps) {
       {/* Topbar and wraped children */}
       <div className="flex flex-col items-center w-full p-4">
         <div className="w-full h-14 bg-zinc-100 rounded-lg flex justify-end items-center mb-6">
+          <h1 className="font-bold text-2xl w-fit mx-auto">
+            {user?.first_name}
+            {"'s "}
+            {activeTab}
+          </h1>
+          {/*
           <FaRegUserCircle size={40} className="mx-4" />
+          */}
         </div>
         {children}
       </div>
