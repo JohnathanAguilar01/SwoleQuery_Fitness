@@ -6,8 +6,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Modal from "@/components/other/Modal";
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
+import { Button } from "@/components/ui/button";
+import AddProgress from "./AddProgress";
 const apiUrl = `http://${import.meta.env.VITE_API_URL}`;
 
 interface Progress {
@@ -21,6 +24,7 @@ interface Progress {
 
 export default function Progress() {
   const [progressData, setProgressData] = useState<Progress[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { user } = useUser();
 
   useEffect(() => {
@@ -37,11 +41,11 @@ export default function Progress() {
       })
       .then((data) => setProgressData(data))
       .catch((error) => console.error("Error fetching workouts:", error));
-  }, [user?.id]);
+  }, [user?.id, isOpen]);
 
   return (
-    <div className="w-full overflow-x-auto p-4 bg-zinc-100 rounded-lg flex justify-end items-center mb-6">
-      <Table>
+    <div className="w-full flex flex-col overflow-x-auto p-4 bg-zinc-100 rounded-lg justify-end items-center mb-6">
+      <Table className="border-b-1">
         <TableHeader>
           <TableRow>
             <TableHead>Date</TableHead>
@@ -69,6 +73,16 @@ export default function Progress() {
           ))}
         </TableBody>
       </Table>
+      <Button
+        className="block bg-blue-400 mx-auto font-bold mt-2"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        ADD
+      </Button>
+
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)}>
+        <AddProgress onClose={() => setIsOpen(!isOpen)} />
+      </Modal>
     </div>
   );
 }

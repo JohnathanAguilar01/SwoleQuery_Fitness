@@ -5,6 +5,9 @@ import { GiProgression } from "react-icons/gi";
 import { useUser } from "@/context/UserContext";
 import { MdSpaceDashboard, MdOutlineMenuBook } from "react-icons/md";
 
+const capitalizeFirstLetter = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
 type MainPageProps = {
   children: React.ReactNode;
   setActiveTab: (tab: "dashboard" | "diary" | "progress") => void;
@@ -71,7 +74,7 @@ function MainPage({ children, setActiveTab, activeTab }: MainPageProps) {
           <h1 className="font-bold text-2xl w-fit mx-auto">
             {user?.first_name}
             {"'s "}
-            {activeTab}
+            {capitalizeFirstLetter(activeTab)}
           </h1>
           {/*
           <FaRegUserCircle size={40} className="mx-4" />

@@ -48,12 +48,6 @@ router.post("/add", async (req, res) => {
       return res.status(400).json({ error: "user_id or weight not present" });
     }
 
-    if (!Number.isInteger(user_id) || !Number.isFinite(weight)) {
-      return res
-        .status(400)
-        .json({ error: "user_id or weight are not correct data type" });
-    }
-
     const queryProgress =
       "INSERT INTO progress (user_id, recorded_at, weight, body_fat_percentage, muscle_mass) VALUES (?,?,?,?,?)";
 
