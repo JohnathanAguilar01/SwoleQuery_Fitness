@@ -4,10 +4,12 @@ import { Navigate } from "react-router-dom";
 import MainPage from "@/components/MainPage/MainPage";
 import DashBoard from "@/components/MainPage/Dashboard/Dashboard";
 import Diary from "../MainPage/Diary/Diary";
+import Progress from "../MainPage/Progress/Progress";
 
 const TABS = {
   dashboard: <DashBoard />,
   diary: <Diary />,
+  progress: <Progress />,
 };
 
 export default function AuthRoutes() {

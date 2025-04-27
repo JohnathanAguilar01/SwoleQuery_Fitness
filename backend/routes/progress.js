@@ -54,10 +54,12 @@ router.post("/add", async (req, res) => {
         .json({ error: "user_id or weight are not correct data type" });
     }
 
-    const query =
+    const queryProgress =
       "INSERT INTO progress (user_id, recorded_at, weight, body_fat_percentage, muscle_mass) VALUES (?,?,?,?,?)";
 
-    const [rows] = await db.query(query, [
+    const queryUser = "UPDATE users SET weight = ? WHERE user_id = ?;";
+
+    const [rows] = await db.query(queryProgress, [
       user_id,
       recorded_at,
       weight,
@@ -65,7 +67,12 @@ router.post("/add", async (req, res) => {
       muscle_mass,
     ]);
 
-    res.json(rows);
+    const [rows2] = await db.query(queryUser, [weight, user_id]);
+
+    res.json({
+      ProgressRow: rows,
+      userRow: rows2,
+    });
   } catch (error) {
     console.error("Server Error:", error.message);
     return res

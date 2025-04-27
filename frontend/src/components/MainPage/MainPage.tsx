@@ -1,12 +1,13 @@
 // Define the type for the incoming component
 import { FaRunning } from "react-icons/fa";
 import { FaRegUserCircle } from "react-icons/fa";
+import { GiProgression } from "react-icons/gi";
 import { MdSpaceDashboard, MdOutlineMenuBook } from "react-icons/md";
 
 type MainPageProps = {
   children: React.ReactNode;
-  setActiveTab: (tab: "dashboard" | "diary") => void;
-  activeTab: "dashboard" | "diary";
+  setActiveTab: (tab: "dashboard" | "diary" | "progress") => void;
+  activeTab: "dashboard" | "diary" | "progress";
 };
 
 function MainPage({ children, setActiveTab, activeTab }: MainPageProps) {
@@ -33,6 +34,7 @@ function MainPage({ children, setActiveTab, activeTab }: MainPageProps) {
             <h2 className="font-semibold text-xl ml-1 z-10">DashBoard</h2>
           </div>
         </div>
+
         <div
           className="relative flex items-center w-full h-12 bg-red-5 mb-2"
           onClick={() => setActiveTab("diary")}
@@ -43,6 +45,19 @@ function MainPage({ children, setActiveTab, activeTab }: MainPageProps) {
           <div className="absolute flex left-14 z-10">
             <MdOutlineMenuBook size={30} />
             <h2 className="font-semibold text-xl ml-1">Diary</h2>
+          </div>
+        </div>
+
+        <div
+          className="relative flex items-center w-full h-12 mb-2"
+          onClick={() => setActiveTab("progress")}
+        >
+          {activeTab === "progress" && (
+            <div className="absolute h-full z-1 bg-blue-100 border-r-blue-800 border-r-[6px] left-6 right-0 rounded-l-3xl" />
+          )}
+          <div className="absolute flex left-14 z-10">
+            <GiProgression size={30} className="z-10" />
+            <h2 className="font-semibold text-xl ml-1 z-10">Progress</h2>
           </div>
         </div>
       </div>
