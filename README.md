@@ -21,7 +21,7 @@
 
   ```
 
-- react-frontend directory
+- frontend directory
   ```
   VITE_API_URL=
   ```
